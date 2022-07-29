@@ -92,6 +92,16 @@ return [
             'driver' => 'octane',
         ],
 
+        'cache' => [
+            'driver' => 'redis',
+            'connection' => 'cache'
+        ],
+
+        'lock' => [
+            'driver' => 'redis',
+            'connection' => 'lock'
+        ],
+
     ],
 
     /*
