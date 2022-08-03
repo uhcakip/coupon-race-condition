@@ -2,10 +2,27 @@
 
 FROM php:8.1-fpm-alpine3.15
 
+# install tool
+RUN apk add mysql-client vim busybox-extras git openssh
+
 # install core extension
 RUN docker-php-ext-install opcache \
     pdo_mysql \
     mysqli
+
+# install xdebug
+RUN apk add php8-pecl-xdebug
+
+# install golang
+COPY --from=golang:1.18-alpine /usr/local/go/ /usr/local/go/
+ENV PATH="/usr/local/go/bin:${PATH}"
+ENV PATH="/root/go/bin:${PATH}"
+
+# install k6
+COPY --from=loadimpact/k6:latest /usr/bin/k6 /usr/bin/k6
+
+# install xk6
+RUN go install go.k6.io/xk6/cmd/xk6@latest
 
 # install redis extension
 RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
@@ -30,9 +47,6 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
     && /usr/local/bin/phpcs --config-set colors 1 \
     && /usr/local/bin/phpcs --config-set report_width 140 \
     && /usr/local/bin/phpcs --config-set encoding utf-8
-
-# install tool
-RUN apk add mysql-client vim busybox-extras git openssh
 
 WORKDIR /code
 
