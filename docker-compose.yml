@@ -24,7 +24,7 @@ services:
       - "app"
 
   mysql:
-    platform: linux/x86_64 # for apple sillcon
+    platform: linux/x86_64 # for apple silicon
     image: mysql:8.0.23
     container_name: mysql
     hostname: mysql
